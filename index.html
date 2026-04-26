@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Free Printable Word Search &amp; Sudoku for Kids — Kids Puzzle Generator</title>
+  <meta name="description" content="Free printable word search and sudoku puzzles for kids. No sign-up, no ads. Screen-free brain training — generate, download and print in seconds. Perfect for homeschoolers, teachers and parents." />
+  <meta name="keywords" content="free printable word search for kids, free sudoku printable, kids puzzle generator, homeschool printables, free worksheets for kids, screen-free activities, morning work printables, early finisher activities" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #111827;
+      background: #fff;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Navbar ─────────────────────────────────────────── */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e5e7eb;
+      height: 62px;
+      display: flex; align-items: center;
+      padding: 0 6%;
+      gap: 28px;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 800; font-size: 16px; color: #111827;
+      text-decoration: none; letter-spacing: -0.3px;
+      white-space: nowrap;
+    }
+    .nav-logo-box {
+      width: 34px; height: 34px;
+      background: #1c2b4a; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px;
+    }
+    .nav-links {
+      display: flex; gap: 24px; list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none; color: #4b5563;
+      font-size: 14px; font-weight: 500;
+      transition: color .15s;
+    }
+    .nav-links a:hover { color: #111827; }
+    .nav-spacer { flex: 1; }
+    .nav-cta {
+      background: #2563eb; color: #fff;
+      padding: 9px 20px; border-radius: 7px;
+      font-size: 14px; font-weight: 700;
+      text-decoration: none;
+      transition: background .15s, transform .1s;
+      white-space: nowrap;
+    }
+    .nav-cta:hover { background: #1d4ed8; transform: translateY(-1px); }
+
+    /* ── Hero ───────────────────────────────────────────── */
+    .hero {
+      display: flex; align-items: center;
+      gap: 56px; padding: 72px 6% 80px;
+      max-width: 1240px; margin: 0 auto;
+    }
+    .hero-left { flex: 1; min-width: 0; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: #eff6ff; color: #1d4ed8;
+      font-size: 12px; font-weight: 700;
+      padding: 5px 13px; border-radius: 100px;
+      margin-bottom: 26px; letter-spacing: 0.2px;
+    }
+    .hero-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: #2563eb; }
+    .hero-h1 {
+      font-size: 54px; font-weight: 900;
+      line-height: 1.08; letter-spacing: -2px;
+      color: #0f172a; margin-bottom: 22px;
+    }
+    .hero-h1 em { color: #2563eb; font-style: normal; }
+    .hero-sub {
+      font-size: 18px; color: #6b7280;
+      line-height: 1.65; margin-bottom: 40px;
+      max-width: 420px;
+    }
+    .hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .btn-start {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: #2563eb; color: #fff;
+      padding: 15px 30px; border-radius: 9px;
+      font-size: 16px; font-weight: 800;
+      text-decoration: none; letter-spacing: -0.2px;
+      box-shadow: 0 4px 20px rgba(37,99,235,0.4);
+      transition: background .15s, transform .12s, box-shadow .15s;
+    }
+    .btn-start:hover {
+      background: #1d4ed8; transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(37,99,235,0.42);
+    }
+    .btn-start-arrow { font-size: 20px; }
+    .hero-note {
+      font-size: 13px; color: #9ca3af;
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    /* ── Demo Mockup ────────────────────────────────────── */
+    .hero-right { flex: 1.15; min-width: 0; }
+    .mockup-outer {
+      position: relative;
+      filter: drop-shadow(0 24px 64px rgba(0,0,0,0.16)) drop-shadow(0 6px 18px rgba(0,0,0,0.08));
+    }
+    .mockup-shell {
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+    /* Browser chrome bar */
+    .chrome-bar {
+      background: #e8eaed; padding: 10px 14px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .chrome-dots { display: flex; gap: 6px; }
+    .chrome-dot {
+      width: 11px; height: 11px; border-radius: 50%;
+    }
+    .dot-r { background: #fc5753; }
+    .dot-y { background: #fdbc40; }
+    .dot-g { background: #33c748; }
+    .chrome-url {
+      flex: 1; background: #fff; border-radius: 5px;
+      height: 24px; padding: 0 10px;
+      font-size: 10px; color: #5f6368;
+      display: flex; align-items: center; gap: 5px;
+      border: 1px solid #dadce0;
+    }
+    /* App inside mockup */
+    .app-nav {
+      background: #1c2b4a; height: 34px;
+      display: flex; align-items: center; padding: 0 12px; gap: 7px;
+    }
+    .app-nav-logo {
+      display: flex; align-items: center; gap: 5px;
+      color: #fff; font-size: 11px; font-weight: 700;
+    }
+    .app-nav-icon {
+      width: 18px; height: 18px; background: #4a7cdc;
+      border-radius: 4px; font-size: 9px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .app-nav-sub { color: rgba(255,255,255,.45); font-size: 9px; }
+    .app-toolbar {
+      background: #fff; border-bottom: 1px solid #e5e7eb;
+      height: 34px; display: flex; align-items: center;
+      padding: 0 12px; gap: 7px;
+    }
+    .app-lbl {
+      font-size: 8.5px; font-weight: 700; color: #9ca3af;
+      text-transform: uppercase; letter-spacing: 0.4px;
+    }
+    .app-sel {
+      background: #f9fafb; border: 1px solid #e5e7eb;
+      border-radius: 4px; height: 20px; padding: 0 7px;
+      font-size: 9.5px; color: #374151;
+      display: flex; align-items: center; gap: 3px;
+      white-space: nowrap;
+    }
+    .app-sep { width: 1px; height: 18px; background: #f0f0f0; }
+    .app-spacer { flex: 1; }
+    .app-btn {
+      height: 22px; padding: 0 9px; border-radius: 4px;
+      font-size: 9.5px; font-weight: 700;
+      display: flex; align-items: center; gap: 3px;
+      transition: all .25s ease;
+    }
+    .app-btn-primary { background: #4a7cdc; color: #fff; }
+    .app-btn-outline { background: #fff; color: #374151; border: 1px solid #e5e7eb; }
+    .app-btn.pulse {
+      box-shadow: 0 0 0 4px rgba(74,124,220,.35);
+      transform: scale(1.08);
+    }
+    .app-btn-outline.pulse-green {
+      background: #16a34a; color: #fff; border-color: #16a34a;
+      box-shadow: 0 0 0 4px rgba(22,163,74,.3);
+      transform: scale(1.08);
+    }
+    .app-body { background: #f0f2f5; padding: 12px; min-height: 220px; }
+
+    /* Mini grid */
+    .mini-grid-wrap { display: flex; justify-content: center; }
+    .mini-grid {
+      display: grid; gap: 1px;
+      font-family: 'Courier New', monospace;
+      font-weight: 700; font-size: 6.5px;
+    }
+    .mc {
+      width: 13px; height: 13px;
+      display: flex; align-items: center; justify-content: center;
+      color: #374151;
+    }
+    .mc.h { background: #1c2b4a; color: #fff; border-radius: 2px; }
+
+    /* Mini panels */
+    .mini-panels { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .mini-panel { background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; overflow: hidden; }
+    .mini-ph {
+      background: #fafbfc; border-bottom: 1px solid #e5e7eb;
+      padding: 5px 8px; display: flex; align-items: center; gap: 4px;
+    }
+    .mini-pbadge {
+      width: 13px; height: 13px; border-radius: 3px; font-size: 6.5px;
+      font-weight: 800; display: flex; align-items: center; justify-content: center;
+    }
+    .pb-blue { background: #e8eef8; color: #4a7cdc; }
+    .pb-green { background: #dcfce7; color: #16a34a; }
+    .mini-ptitle { font-size: 8px; font-weight: 700; color: #1a1a1a; }
+    .mini-pb { padding: 7px; }
+    .mini-chips { display: flex; flex-wrap: wrap; gap: 2px; margin-top: 4px; }
+    .mini-chip {
+      padding: 1px 5px; background: #f3f4f6;
+      border-radius: 3px; font-size: 5.5px; font-weight: 700;
+      color: #374151; font-family: 'Courier New', monospace;
+    }
+    .mini-chip.found { background: #dcfce7; color: #15803d; }
+
+    /* Empty / loading / done */
+    .app-empty { text-align: center; padding: 55px 20px; }
+    .app-empty-icon { font-size: 26px; opacity: .3; margin-bottom: 6px; }
+    .app-empty-txt { font-size: 9.5px; color: #9ca3af; }
+    .app-spin-wrap { text-align: center; padding: 55px 20px; }
+    .app-spinner {
+      width: 22px; height: 22px;
+      border: 2.5px solid #e5e7eb; border-top-color: #4a7cdc;
+      border-radius: 50%; animation: spin .65s linear infinite;
+      margin: 0 auto 8px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .app-spin-txt { font-size: 9.5px; color: #6b7280; }
+
+    /* Floating step badge */
+    .demo-step {
+      position: absolute; bottom: -38px; left: 50%;
+      transform: translateX(-50%);
+      background: #0f172a; color: #fff;
+      font-size: 11.5px; font-weight: 600;
+      padding: 7px 18px; border-radius: 100px;
+      white-space: nowrap;
+      transition: opacity .3s;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    }
+
+    /* Fade-in animation */
+    .fadein { animation: fi .4s ease; }
+    @keyframes fi { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+
+    /* ── How it works ───────────────────────────────────── */
+    .how { background: #f8fafc; padding: 88px 6%; }
+    .section-eyebrow {
+      text-align: center; font-size: 12px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 1.2px;
+      color: #2563eb; margin-bottom: 12px;
+    }
+    .section-h2 {
+      text-align: center; font-size: 38px; font-weight: 900;
+      letter-spacing: -1px; color: #0f172a; margin-bottom: 10px;
+    }
+    .section-lead {
+      text-align: center; font-size: 16px; color: #6b7280;
+      margin-bottom: 56px;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px; max-width: 900px; margin: 0 auto;
+    }
+    .step {
+      background: #fff; border: 1px solid #e5e7eb;
+      border-radius: 14px; padding: 32px 28px;
+    }
+    .step-num {
+      width: 42px; height: 42px; background: #eff6ff;
+      color: #2563eb; border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 900; margin-bottom: 18px;
+    }
+    .step-title { font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
+    .step-desc { font-size: 14px; color: #6b7280; line-height: 1.65; }
+
+    /* ── Activities ─────────────────────────────────────── */
+    .activities { padding: 88px 6%; max-width: 1240px; margin: 0 auto; }
+    .activities-hdr { text-align: center; margin-bottom: 52px; }
+    .act-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(248px, 1fr));
+      gap: 18px;
+    }
+    .act-card {
+      border: 1px solid #e5e7eb; border-radius: 14px;
+      padding: 28px 24px; text-decoration: none; color: inherit;
+      position: relative; display: block;
+      transition: box-shadow .2s, transform .15s, border-color .15s;
+    }
+    .act-card:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.09); transform: translateY(-3px); }
+    .act-card.live { border-color: #bfdbfe; background: #f8fbff; }
+    .act-icon { font-size: 34px; margin-bottom: 14px; }
+    .act-title { font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 7px; }
+    .act-desc { font-size: 13px; color: #6b7280; line-height: 1.55; }
+    .act-badge {
+      position: absolute; top: 16px; right: 16px;
+      font-size: 10px; font-weight: 700;
+      padding: 3px 9px; border-radius: 100px;
+    }
+    .badge-live { background: #dcfce7; color: #15803d; }
+    .badge-soon { background: #f3f4f6; color: #9ca3af; }
+
+    /* ── Email signup ───────────────────────────────────── */
+    .subscribe {
+      background: #1c2b4a; padding: 88px 6%;
+      text-align: center;
+    }
+    .subscribe .section-eyebrow { color: #93c5fd; }
+    .subscribe .section-h2 { color: #fff; }
+    .subscribe .section-lead { color: rgba(255,255,255,.6); margin-bottom: 38px; }
+    .email-form {
+      display: flex; gap: 10px;
+      max-width: 500px; margin: 0 auto 14px;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .email-inp {
+      flex: 1; min-width: 220px; height: 50px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px; padding: 0 16px;
+      font-size: 15px; color: #fff; outline: none;
+      transition: border-color .15s, background .15s;
+    }
+    .email-inp::placeholder { color: rgba(255,255,255,0.4); }
+    .email-inp:focus { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.15); }
+    .email-sub {
+      height: 50px; padding: 0 26px;
+      background: #2563eb; color: #fff;
+      border: none; border-radius: 8px;
+      font-size: 15px; font-weight: 700; cursor: pointer;
+      transition: background .15s; white-space: nowrap;
+    }
+    .email-sub:hover { background: #1d4ed8; }
+    .email-note { font-size: 12px; color: rgba(255,255,255,0.35); }
+    .sub-success { color: #93c5fd; font-size: 15px; font-weight: 600; padding: 12px 0; }
+
+    /* ── Footer ─────────────────────────────────────────── */
+    .footer {
+      background: #0f172a; padding: 36px 6%;
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 20px;
+    }
+    .footer-brand {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .footer-logo-txt {
+      font-size: 14px; font-weight: 800; color: #fff;
+      text-decoration: none;
+    }
+    .footer-copy { font-size: 12px; color: #4b5563; }
+    .footer-links {
+      display: flex; align-items: center; gap: 20px;
+    }
+    .footer-links a {
+      font-size: 13px; color: #6b7280;
+      text-decoration: none; transition: color .15s;
+    }
+    .footer-links a:hover { color: #e5e7eb; }
+    .coffee-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #FFDD00; color: #111;
+      padding: 10px 20px; border-radius: 8px;
+      font-size: 14px; font-weight: 800;
+      text-decoration: none; white-space: nowrap;
+      transition: background .15s, transform .12s;
+    }
+    .coffee-btn:hover { background: #f5d300; transform: translateY(-2px); }
+
+    /* ── Why Paper benefits ─────────────────────────────── */
+    .benefits { background: #fff; padding: 88px 6%; }
+    .benefits-inner { max-width: 1000px; margin: 0 auto; }
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px; margin-top: 0;
+    }
+    .benefit-card {
+      background: #f8fafc; border: 1px solid #e5e7eb;
+      border-radius: 14px; padding: 26px 22px;
+      transition: box-shadow .2s, transform .15s;
+    }
+    .benefit-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.07); transform: translateY(-2px); }
+    .benefit-icon { font-size: 28px; margin-bottom: 12px; }
+    .benefit-title { font-size: 14px; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+    .benefit-desc { font-size: 13px; color: #6b7280; line-height: 1.6; }
+    .benefit-outcome {
+      margin-top: 10px; font-size: 11px; font-weight: 700;
+      color: #2563eb; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
+    /* ── Who it's for (personas) ────────────────────────── */
+    .personas { background: #f8fafc; padding: 88px 6%; }
+    .personas-inner { max-width: 1100px; margin: 0 auto; }
+    .persona-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .persona-card {
+      background: #fff; border: 1px solid #e5e7eb;
+      border-radius: 16px; padding: 32px 28px;
+      position: relative; overflow: hidden;
+    }
+    .persona-card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 4px;
+    }
+    .persona-card.p1::before { background: #2563eb; }
+    .persona-card.p2::before { background: #16a34a; }
+    .persona-card.p3::before { background: #7c3aed; }
+    .persona-emoji { font-size: 36px; margin-bottom: 14px; }
+    .persona-label {
+      font-size: 11px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 1px; margin-bottom: 8px;
+    }
+    .p1 .persona-label { color: #2563eb; }
+    .p2 .persona-label { color: #16a34a; }
+    .p3 .persona-label { color: #7c3aed; }
+    .persona-title { font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 10px; letter-spacing: -0.3px; }
+    .persona-desc { font-size: 14px; color: #6b7280; line-height: 1.65; margin-bottom: 18px; }
+    .persona-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .persona-tag {
+      font-size: 11px; font-weight: 700; padding: 4px 10px;
+      border-radius: 100px;
+    }
+    .p1 .persona-tag { background: #eff6ff; color: #1d4ed8; }
+    .p2 .persona-tag { background: #f0fdf4; color: #15803d; }
+    .p3 .persona-tag { background: #f5f3ff; color: #6d28d9; }
+
+    /* ── Responsive ─────────────────────────────────────── */
+    @media (max-width: 860px) {
+      .hero { flex-direction: column; padding: 48px 5% 60px; gap: 48px; }
+      .hero-h1 { font-size: 38px; letter-spacing: -1px; }
+      .hero-right { width: 100%; }
+      .nav-links { display: none; }
+      .footer { flex-direction: column; align-items: flex-start; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navbar ──────────────────────────────────────────── -->
+  <nav class="nav">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-box">🧩</div>
+      Kids Puzzle Generator
+    </a>
+    <ul class="nav-links">
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#why-paper">Why paper?</a></li>
+      <li><a href="#activities">Activities</a></li>
+      <li><a href="#subscribe">For Parents</a></li>
+    </ul>
+    <div class="nav-spacer"></div>
+    <a href="puzzle.html" class="nav-cta">Get Started →</a>
+  </nav>
+
+  <!-- ── Hero ────────────────────────────────────────────── -->
+  <section style="overflow:hidden;">
+    <div class="hero">
+
+      <!-- Left: copy -->
+      <div class="hero-left">
+        <div class="hero-badge">
+          <div class="hero-badge-dot"></div>
+          Screen-Free · No sign-up · Free Printables
+        </div>
+        <h1 class="hero-h1">
+          Build brighter kids,<br>one <em>printed page</em> at a time
+        </h1>
+        <p class="hero-sub">
+          Free word searches and sudoku puzzles that sharpen focus,
+          build resilience, and get kids off screens — generated in
+          seconds and ready to print.
+        </p>
+        <div class="hero-actions">
+          <a href="puzzle.html" class="btn-start">
+            Generate a Free Puzzle
+            <span class="btn-start-arrow">→</span>
+          </a>
+          <span class="hero-note">No login · No ads · 100% free</span>
+        </div>
+      </div>
+
+      <!-- Right: animated demo mockup -->
+      <div class="hero-right">
+        <div class="mockup-outer" style="padding-bottom:44px;">
+          <div class="mockup-shell">
+
+            <!-- Browser chrome -->
+            <div class="chrome-bar">
+              <div class="chrome-dots">
+                <div class="chrome-dot dot-r"></div>
+                <div class="chrome-dot dot-y"></div>
+                <div class="chrome-dot dot-g"></div>
+              </div>
+              <div class="chrome-url">🔒 kids-puzzle-generator.app</div>
+            </div>
+
+            <!-- App navbar -->
+            <div class="app-nav">
+              <div class="app-nav-logo">
+                <div class="app-nav-icon">🧩</div>
+                Kids Puzzle Generator
+              </div>
+              <div style="flex:1"></div>
+              <span class="app-nav-sub">Print-ready puzzles for kids</span>
+            </div>
+
+            <!-- App toolbar -->
+            <div class="app-toolbar">
+              <span class="app-lbl">Type</span>
+              <div class="app-sel">Word Search ▾</div>
+              <div class="app-sep"></div>
+              <span class="app-lbl">Difficulty</span>
+              <div class="app-sel" id="d-diff">Easy ▾</div>
+              <div class="app-sep"></div>
+              <span class="app-lbl">Theme</span>
+              <div class="app-sel" id="d-theme">Animals ▾</div>
+              <div class="app-spacer"></div>
+              <div class="app-btn app-btn-outline" id="d-dl" style="display:none;">⬇ Download</div>
+              <div class="app-btn app-btn-primary" id="d-gen">▶ Generate</div>
+            </div>
+
+            <!-- App body -->
+            <div class="app-body" id="d-body">
+              <div class="app-empty">
+                <div class="app-empty-icon">📄</div>
+                <div class="app-empty-txt">Click Generate to create a puzzle</div>
+              </div>
+            </div>
+
+          </div><!-- /mockup-shell -->
+          <div class="demo-step" id="d-step">Choose your settings</div>
+        </div><!-- /mockup-outer -->
+      </div><!-- /hero-right -->
+
+    </div>
+  </section>
+
+  <!-- ── How it works ─────────────────────────────────────── -->
+  <section class="how" id="how">
+    <div class="section-eyebrow">Simple as 1-2-3</div>
+    <h2 class="section-h2">How it works</h2>
+    <p class="section-lead">From zero to printed puzzle in under a minute.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">Choose your settings</div>
+        <div class="step-desc">Pick a puzzle type, difficulty, grid size, and theme. Word search or sudoku — you decide.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">Generate instantly</div>
+        <div class="step-desc">One click creates a unique puzzle with a built-in answer key — no two puzzles are ever the same.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">Print &amp; play</div>
+        <div class="step-desc">Download a print-ready file and press Ctrl+P. Perfect for classrooms, car trips, or rainy afternoons.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Why Paper? ──────────────────────────────────────── -->
+  <section class="benefits" id="why-paper">
+    <div class="benefits-inner">
+      <div class="section-eyebrow">The science behind it</div>
+      <h2 class="section-h2">Why paper beats a screen</h2>
+      <p class="section-lead">
+        Physical puzzles engage the brain differently. Here's what the research says.
+      </p>
+      <div class="benefits-grid">
+        <div class="benefit-card">
+          <div class="benefit-icon">🧠</div>
+          <div class="benefit-title">Cognitive Development</div>
+          <div class="benefit-desc">Pattern recognition and strategic thinking build executive function — the mental skill set behind planning, focus, and self-control.</div>
+          <div class="benefit-outcome">→ Better problem-solving</div>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">📚</div>
+          <div class="benefit-title">Literacy & Vocabulary</div>
+          <div class="benefit-desc">Visual scanning and repeated word exposure in themed word searches build spelling, reading readiness, and vocabulary naturally.</div>
+          <div class="benefit-outcome">→ Stronger early literacy</div>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">✏️</div>
+          <div class="benefit-title">Fine Motor Skills</div>
+          <div class="benefit-desc">Holding a pencil, circling letters, and writing numbers on paper develops the hand-eye coordination kids need for school.</div>
+          <div class="benefit-outcome">→ Better handwriting</div>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">💪</div>
+          <div class="benefit-title">Resilience & Patience</div>
+          <div class="benefit-desc">Unlike apps that give instant hints, paper puzzles teach kids to sit with difficulty — building the "try again" mindset that predicts long-term success.</div>
+          <div class="benefit-outcome">→ Growth mindset</div>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">😴</div>
+          <div class="benefit-title">Better Sleep</div>
+          <div class="benefit-desc">No blue light, no notifications, no overstimulation. Paper puzzles are a calming wind-down activity that support healthy sleep routines.</div>
+          <div class="benefit-outcome">→ Reduced screen fatigue</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Who it's for ──────────────────────────────────────── -->
+  <section class="personas" id="who">
+    <div class="personas-inner">
+      <div class="section-eyebrow">Made for</div>
+      <h2 class="section-h2">Who uses it</h2>
+      <p class="section-lead">Three groups love this tool for very different reasons.</p>
+      <div class="persona-grid">
+
+        <div class="persona-card p1">
+          <div class="persona-emoji">🏠</div>
+          <div class="persona-label">Homeschool Families</div>
+          <div class="persona-title">The Homeschooling Parent</div>
+          <div class="persona-desc">You build thematic units where a puzzle isn't just a puzzle — it's a "Dinosaur Logic Challenge" that ties into your science week. You need printable packs that cover literacy, math, and reasoning in one go.</div>
+          <div class="persona-tags">
+            <span class="persona-tag">Thematic units</span>
+            <span class="persona-tag">All ages</span>
+            <span class="persona-tag">Curriculum supplements</span>
+          </div>
+        </div>
+
+        <div class="persona-card p2">
+          <div class="persona-emoji">🍎</div>
+          <div class="persona-label">K–5 Educators</div>
+          <div class="persona-title">The Primary School Teacher</div>
+          <div class="persona-desc">You need low-prep materials ready for Morning Work, Early Finisher stations, and Friday Fun. Every minute of setup time matters — a unique puzzle with an answer key in one click is exactly what you need.</div>
+          <div class="persona-tags">
+            <span class="persona-tag">Morning Work</span>
+            <span class="persona-tag">Early Finishers</span>
+            <span class="persona-tag">Friday Fun</span>
+            <span class="persona-tag">No prep</span>
+          </div>
+        </div>
+
+        <div class="persona-card p3">
+          <div class="persona-emoji">🧘</div>
+          <div class="persona-label">Mindful Parents</div>
+          <div class="persona-title">The Screen-Conscious Parent</div>
+          <div class="persona-desc">You feel the digital guilt when kids are on iPads. Paper puzzles give you quality time — sit together, think together, solve together. It's a "Brain Warm-Up" that brings calm focus after school or sport.</div>
+          <div class="persona-tags">
+            <span class="persona-tag">Screen-free time</span>
+            <span class="persona-tag">Quality time</span>
+            <span class="persona-tag">Brain warm-ups</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Activities ───────────────────────────────────────── -->
+  <section id="activities" style="padding:88px 0;">
+    <div class="activities">
+      <div class="activities-hdr">
+        <div class="section-eyebrow">Kids activities</div>
+        <h2 class="section-h2">More fun on the way</h2>
+        <p class="section-lead" style="margin-bottom:0;">
+          Start with puzzles — more tools for parents and teachers coming soon.
+        </p>
+      </div>
+      <div class="act-grid">
+        <a href="puzzle.html" class="act-card live">
+          <span class="act-badge badge-live">● Live now</span>
+          <div class="act-icon">🔤</div>
+          <div class="act-title">Word Search Generator</div>
+          <div class="act-desc">Themed word searches across 6 topics — animals, food, nature and more. Easy to Hard.</div>
+        </a>
+        <a href="puzzle.html" class="act-card live">
+          <span class="act-badge badge-live">● Live now</span>
+          <div class="act-icon">🔢</div>
+          <div class="act-title">Sudoku Generator</div>
+          <div class="act-desc">4×4 beginner grids up to classic 9×9. Great for building logic skills in young minds.</div>
+        </a>
+        <div class="act-card" style="opacity:.65; cursor:default;">
+          <span class="act-badge badge-soon">Coming soon</span>
+          <div class="act-icon">✏️</div>
+          <div class="act-title">Crossword Generator</div>
+          <div class="act-desc">Custom crosswords with clues tailored by topic and difficulty level.</div>
+        </div>
+        <div class="act-card" style="opacity:.65; cursor:default;">
+          <span class="act-badge badge-soon">Coming soon</span>
+          <div class="act-icon">🧮</div>
+          <div class="act-title">Maths Worksheets</div>
+          <div class="act-desc">Printable addition, subtraction, multiplication and division practice sheets.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Email Signup ──────────────────────────────────────── -->
+  <section class="subscribe" id="subscribe">
+    <div class="section-eyebrow">Join the screen-free movement</div>
+    <h2 class="section-h2">New free resources, straight to your inbox.</h2>
+    <p class="section-lead">
+      Seasonal puzzles, new themes, and printable packs for homeschoolers and teachers —
+      delivered free. Be first to know.
+    </p>
+
+    <!-- Brevo response messages (styled for dark background) -->
+    <div id="error-message" style="display:none; max-width:500px; margin:0 auto 14px; padding:12px 18px; background:rgba(220,38,38,0.18); border:1px solid rgba(252,165,165,0.4); border-radius:8px; color:#fca5a5; font-size:14px; text-align:center;">
+      Subscription could not be saved — please try again.
+    </div>
+    <div id="success-message" style="display:none; max-width:500px; margin:0 auto 14px; padding:12px 18px; background:rgba(22,163,74,0.2); border:1px solid rgba(134,239,172,0.4); border-radius:8px; color:#86efac; font-size:14px; text-align:center;">
+      ✓ You're in! We'll let you know when new tools drop.
+    </div>
+
+    <!-- Brevo subscription form -->
+    <form class="email-form" id="sib-form"
+      method="POST"
+      action="https://cbefea86.sibforms.com/serve/MUIFAFZbBExEOjqthIXP_8elbuAWQsC8ozopJzrQNtk_fu43EM7UnKJPxXmmdH_aof1SFn5RKM59dHzgOx3QYEob7669vc0yxJ4SDSroSvNEnfAt0ZzgNNYyEpXt26M84yb8g7iqfy_JqKuCJTWotAWv2bYQL4SSCxpfA1A5ppDNuFDIphC9TAkKirL18qoIrm_n89YnNi6axdLcJw=="
+      data-type="subscription">
+      <input type="email" class="email-inp" id="EMAIL" name="EMAIL"
+        autocomplete="off" placeholder="Enter your email address" required />
+      <!-- Brevo required anti-bot + locale fields — do not remove -->
+      <input type="text" name="email_address_check" value="" style="position:absolute;left:-5000px;" tabindex="-1" />
+      <input type="hidden" name="locale" value="en" />
+      <button type="submit" class="email-sub">Subscribe →</button>
+    </form>
+    <div class="email-note">No spam. Unsubscribe any time.</div>
+  </section>
+
+  <!-- ── Footer ───────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer-brand">
+      <span style="font-size:22px;">🧩</span>
+      <div>
+        <div class="footer-logo-txt">Kids Puzzle Generator</div>
+        <div class="footer-copy">© <span id="yr"></span> · Building brains, one printed page at a time</div>
+      </div>
+    </div>
+
+    <div class="footer-links">
+      <a href="puzzle.html">Launch App</a>
+      <a href="#how">How it works</a>
+      <a href="#why-paper">Why paper?</a>
+      <a href="#who">Who it's for</a>
+      <a href="#activities">Activities</a>
+      <a href="#subscribe">Subscribe</a>
+    </div>
+
+    <!--
+      BUY ME A COFFEE:
+      Replace YOUR_USERNAME with your actual Buy Me a Coffee username.
+      e.g. https://www.buymeacoffee.com/arnoldpuzzles
+    -->
+    <a href="https://www.buymeacoffee.com/YOUR_USERNAME"
+       target="_blank" rel="noopener" class="coffee-btn">
+      ☕ Buy me a coffee
+    </a>
+  </footer>
+
+  <script>
+    // ── Dynamic year ──────────────────────────────────────────────────────────
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    // Brevo handles form submission and success/error display via its own script below
+
+    // ── Demo animation ────────────────────────────────────────────────────────
+    const GRID = [
+      ['C','A','T','X','B','E','A','R'],
+      ['O','D','O','G','I','N','G','L'],
+      ['W','O','L','F','R','D','S','Y'],
+      ['F','O','X','L','I','O','N','Z'],
+      ['H','E','N','P','I','G','A','K'],
+      ['T','I','G','E','R','X','F','Q'],
+      ['B','E','A','R','Z','Y','O','M'],
+      ['E','A','G','L','E','P','A','N'],
+    ];
+    // Words and their cell positions
+    const HL = new Set([
+      '0,0','0,1','0,2',           // CAT
+      '2,0','2,1','2,2','2,3',     // WOLF
+      '3,4','3,5','3,6',           // ION (part of LION)
+      '5,0','5,1','5,2','5,3','5,4', // TIGER
+      '7,0','7,1','7,2','7,3','7,4', // EAGLE
+    ]);
+    const WORDS = ['CAT','DOG','WOLF','LION','HEN','PIG','TIGER','EAGLE'];
+
+    function grid(showHL) {
+      let h = `<div class="mini-grid-wrap"><div class="mini-grid" style="grid-template-columns:repeat(8,13px);gap:1px;margin-bottom:5px;">`;
+      for (let r = 0; r < 8; r++)
+        for (let c = 0; c < 8; c++)
+          h += `<div class="mc${showHL && HL.has(r+','+c) ? ' h' : ''}">${GRID[r][c]}</div>`;
+      return h + '</div></div>';
+    }
+
+    function chips(found) {
+      return '<div class="mini-chips">' +
+        WORDS.map(w => `<div class="mini-chip${found ? ' found' : ''}">${w}</div>`).join('') +
+        '</div>';
+    }
+
+    const $ = id => document.getElementById(id);
+
+    const phases = [
+      // 0: idle — empty state
+      { ms: 2200, run() {
+        $('d-step').textContent = '1 · Choose your settings';
+        $('d-dl').style.display = 'none';
+        $('d-gen').classList.remove('pulse');
+        $('d-dl').classList.remove('pulse-green');
+        $('d-body').innerHTML = `<div class="app-empty"><div class="app-empty-icon">📄</div><div class="app-empty-txt">Choose settings above, then click Generate</div></div>`;
+      }},
+      // 1: highlight Generate
+      { ms: 1300, run() {
+        $('d-step').textContent = '2 · Click Generate';
+        $('d-gen').classList.add('pulse');
+      }},
+      // 2: loading spinner
+      { ms: 1500, run() {
+        $('d-step').textContent = '⏳ Generating your puzzle…';
+        $('d-gen').classList.remove('pulse');
+        $('d-body').innerHTML = `<div class="app-spin-wrap"><div class="app-spinner"></div><div class="app-spin-txt">Creating your puzzle…</div></div>`;
+      }},
+      // 3: show puzzle panels
+      { ms: 3000, run() {
+        $('d-step').textContent = '3 · Puzzle ready — with answer key!';
+        $('d-dl').style.display = 'flex';
+        $('d-body').innerHTML = `
+          <div class="mini-panels fadein">
+            <div class="mini-panel">
+              <div class="mini-ph">
+                <div class="mini-pbadge pb-blue">P</div>
+                <div class="mini-ptitle">Word Search — Animals</div>
+              </div>
+              <div class="mini-pb">
+                ${grid(false)}
+                ${chips(false)}
+              </div>
+            </div>
+            <div class="mini-panel">
+              <div class="mini-ph">
+                <div class="mini-pbadge pb-green">A</div>
+                <div class="mini-ptitle">Answer Key</div>
+              </div>
+              <div class="mini-pb">
+                ${grid(true)}
+                ${chips(true)}
+              </div>
+            </div>
+          </div>`;
+      }},
+      // 4: highlight Download
+      { ms: 1400, run() {
+        $('d-step').textContent = '4 · Download & print!';
+        $('d-dl').classList.add('pulse-green');
+      }},
+      // 5: done
+      { ms: 1500, run() {
+        $('d-step').textContent = '✓ Done — ready to play!';
+        $('d-dl').classList.remove('pulse-green');
+      }},
+    ];
+
+    let idx = 0;
+    function tick() {
+      phases[idx].run();
+      setTimeout(() => { idx = (idx + 1) % phases.length; tick(); }, phases[idx].ms);
+    }
+    setTimeout(tick, 600);
+  </script>
+  <!-- Brevo form validation (required for sib-form to work) -->
+  <script>
+    window.REQUIRED_CODE_ERROR_MESSAGE = 'Please choose a country code';
+    window.LOCALE = 'en';
+    window.EMAIL_INVALID_MESSAGE = 'Please enter a valid email address.';
+    window.SMS_INVALID_MESSAGE   = 'Please enter a valid email address.';
+    window.REQUIRED_ERROR_MESSAGE = 'This field cannot be left blank.';
+    window.GENERIC_INVALID_MESSAGE = 'The information provided is invalid. Please try again.';
+    window.translation = {
+      common: {
+        selectedList: '{quantity} list selected',
+        selectedLists: '{quantity} lists selected',
+        selectedOption: '{quantity} selected',
+        selectedOptions: '{quantity} selected',
+      }
+    };
+    var AUTOHIDE = Boolean(0);
+  </script>
+  <script defer src="https://sibforms.com/forms/end-form/build/main.js"></script>
+</body>
+</html>

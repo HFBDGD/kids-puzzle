@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kids Puzzle Generator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      color: #1a1a1a;
+      font-size: 14px;
+    }
+
+    /* ── Top Navbar ─────────────────────────────────────── */
+    .navbar {
+      background: #1c2b4a;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    }
+    .navbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: -0.3px;
+    }
+    .navbar-logo-icon {
+      width: 28px; height: 28px;
+      background: #4a7cdc;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+    }
+    .navbar-divider { width: 1px; height: 24px; background: rgba(255,255,255,0.15); margin: 0 6px; }
+    .navbar-subtitle { color: rgba(255,255,255,0.55); font-size: 13px; font-weight: 400; }
+    .navbar-spacer { flex: 1; }
+    .navbar-stat {
+      color: rgba(255,255,255,0.7);
+      font-size: 12px;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .navbar-stat strong { color: #fff; font-weight: 600; }
+    .navbar-stat-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.25); }
+
+    /* ── Toolbar ────────────────────────────────────────── */
+    .toolbar {
+      background: #fff;
+      border-bottom: 1px solid #e0e3e8;
+      padding: 0 20px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: sticky;
+      top: 52px;
+      z-index: 99;
+    }
+    .toolbar-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      white-space: nowrap;
+    }
+    .toolbar-select {
+      height: 32px;
+      padding: 0 28px 0 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 5px;
+      font-size: 13px;
+      color: #1a1a1a;
+      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%236b7280' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E") no-repeat right 9px center;
+      appearance: none;
+      cursor: pointer;
+      transition: border-color .15s;
+      min-width: 110px;
+    }
+    .toolbar-select:focus { outline: none; border-color: #4a7cdc; box-shadow: 0 0 0 3px rgba(74,124,220,0.15); }
+    .toolbar-select:hover { border-color: #9ca3af; }
+    .toolbar-sep { width: 1px; height: 28px; background: #e5e7eb; margin: 0 4px; }
+    .toolbar-spacer { flex: 1; }
+    .btn {
+      height: 32px;
+      padding: 0 14px;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: none;
+      transition: background .15s, opacity .15s;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: #4a7cdc;
+      color: #fff;
+    }
+    .btn-primary:hover { background: #3a6ccc; }
+    .btn-primary:disabled { background: #a0b4d8; cursor: not-allowed; }
+    .btn-success {
+      background: #16a34a;
+      color: #fff;
+    }
+    .btn-success:hover { background: #15803d; }
+    .btn-outline {
+      background: #fff;
+      color: #374151;
+      border: 1px solid #d1d5db;
+    }
+    .btn-outline:hover { background: #f9fafb; border-color: #9ca3af; }
+    .btn-icon { font-size: 14px; line-height: 1; }
+
+    /* ── Page body ──────────────────────────────────────── */
+    .page-body {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 20px;
+    }
+
+    /* ── Empty state ────────────────────────────────────── */
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      color: #6b7280;
+    }
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.4;
+    }
+    .empty-state h2 { font-size: 20px; font-weight: 600; color: #374151; margin-bottom: 8px; }
+    .empty-state p { font-size: 14px; }
+
+    /* ── Loading state ──────────────────────────────────── */
+    .loading-state {
+      text-align: center;
+      padding: 80px 20px;
+    }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid #e5e7eb;
+      border-top-color: #4a7cdc;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-state p { color: #6b7280; font-size: 14px; }
+
+    /* ── Error ──────────────────────────────────────────── */
+    .error-banner {
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      color: #b91c1c;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    /* ── Document panels ────────────────────────────────── */
+    .panels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 900px) { .panels { grid-template-columns: 1fr; } }
+
+    .panel {
+      background: #fff;
+      border: 1px solid #e0e3e8;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .panel-header {
+      padding: 12px 18px;
+      border-bottom: 1px solid #e0e3e8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fafbfc;
+    }
+    .panel-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #e8eef8;
+      color: #4a7cdc;
+    }
+    .panel-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a1a1a;
+      flex: 1;
+    }
+    .panel-meta {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .panel-body {
+      padding: 20px;
+    }
+
+    /* ── Info strip ─────────────────────────────────────── */
+    .info-strip {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 10px 14px;
+      background: #f8fafc;
+      border: 1px solid #e0e3e8;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      font-size: 12px;
+      color: #6b7280;
+    }
+    .info-field { display: flex; align-items: center; gap: 6px; }
+    .info-field-label { font-weight: 600; color: #374151; }
+    .info-field-value { color: #6b7280; }
+    .info-field-line { border-bottom: 1px solid #d1d5db; width: 100px; display: inline-block; }
+
+    /* ── Word search grid ───────────────────────────────── */
+    .ws-grid {
+      display: grid;
+      gap: 2px;
+      margin: 0 auto;
+      width: fit-content;
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .ws-cell {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      color: #1a1a1a;
+      border-radius: 3px;
+    }
+    .ws-cell.hl {
+      background: #1c2b4a;
+      color: #fff;
+    }
+
+    /* ── Sudoku grid ────────────────────────────────────── */
+    .sd-grid {
+      display: grid;
+      gap: 0;
+      margin: 0 auto;
+      width: fit-content;
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: 700;
+      font-size: 15px;
+      border: 2px solid #1a1a1a;
+    }
+    .sd-cell {
+      width: 34px; height: 34px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid #c5c9d0;
+      color: #1a1a1a;
+      background: #fff;
+      font-size: 15px;
+    }
+    .sd-cell.given { font-weight: 700; }
+    .sd-cell.empty { color: #c5c9d0; }
+
+    /* ── Word list ──────────────────────────────────────── */
+    .word-list-header {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #6b7280;
+      margin: 18px 0 10px;
+    }
+    .word-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .word-chip {
+      padding: 4px 10px;
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #374151;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* ── Grid wrapper ───────────────────────────────────── */
+    .grid-wrapper {
+      display: flex;
+      justify-content: center;
+      padding: 8px 0;
+    }
+
+    /* ── Print ──────────────────────────────────────────── */
+    @media print {
+      .navbar, .toolbar { display: none !important; }
+      body { background: white; }
+      .page-body { padding: 0; max-width: none; }
+      .panels { grid-template-columns: 1fr; }
+      .panel { border: none; border-radius: 0; page-break-after: always; }
+      .panel:last-child { page-break-after: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function PuzzleGenerator() {
+      const [puzzleType, setPuzzleType] = useState('wordsearch');
+      const [difficulty, setDifficulty]  = useState('easy');
+      const [gridSize,   setGridSize]    = useState('8x8');
+      const [theme,      setTheme]       = useState('animals');
+      const [puzzle,     setPuzzle]      = useState(null);
+      const [loading,    setLoading]     = useState(false);
+      const [error,      setError]       = useState(null);
+      const [stats,      setStats]       = useState({ total: 0, wordsearch: 0, sudoku: 0 });
+
+      useEffect(() => {
+        setGridSize(puzzleType === 'wordsearch' ? '8x8' : '9x9');
+        setPuzzle(null);
+        setError(null);
+      }, [puzzleType]);
+
+      // ─── Word Lists ─────────────────────────────────────────────────────────────
+      const WORD_BANKS = {
+        animals:  ['CAT','DOG','COW','HEN','PIG','FOX','OWL','BEE','ANT','EMU','YAK','RAM','EWE',
+                    'LION','BEAR','FROG','DEER','WOLF','DUCK','FISH','CRAB','WORM','MOLE',
+                    'TIGER','HORSE','SHARK','EAGLE','SNAKE','MOUSE','SHEEP','RHINO','CAMEL','ZEBRA','PANDA','KOALA','OTTER'],
+        colors:   ['RED','BLUE','PINK','GOLD','GREY','TEAL','CYAN','LIME','PLUM','NAVY','ROSE','JADE','RUBY',
+                    'AMBER','BLACK','WHITE','BROWN','CORAL','IVORY','LILAC','OLIVE','PEACH','CREAM',
+                    'VIOLET','ORANGE','YELLOW','PURPLE','SILVER','MAROON','CRIMSON'],
+        food:     ['PIE','EGG','HAM','FIG','YAM','OAT','PEA',
+                    'RICE','CAKE','CORN','MILK','PEAR','PLUM','BEAN','TOFU','TACO','SOUP',
+                    'BREAD','APPLE','GRAPE','LEMON','MANGO','OLIVE','ONION','PASTA','PEACH','PIZZA','SALAD','TOAST','SUGAR','HONEY'],
+        vehicles: ['CAR','BUS','VAN','JET','BIKE','BOAT','TRAM','SHIP','TAXI','JEEP','SLED',
+                    'TRAIN','PLANE','TRUCK','YACHT','CANOE','BARGE','FERRY','ROCKET','SCOOTER'],
+        nature:   ['SUN','SKY','SEA','ICE','MUD','DEW','FOG',
+                    'LAKE','RAIN','SNOW','WIND','LEAF','ROCK','SAND','TIDE','WAVE','TREE','BUSH','HILL','POND',
+                    'RIVER','CLOUD','STONE','STORM','SHORE','VALLEY','FOREST','DESERT'],
+        sports:   ['RUN','SKI','SWIM','GOLF','SURF','DIVE','BOWL','JUMP','KICK',
+                    'TENNIS','HOCKEY','SOCCER','BOXING','ROWING','CYCLING','CRICKET'],
+      };
+
+      // ─── Helpers ─────────────────────────────────────────────────────────────────
+      const shuffle = (arr) => {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      };
+
+      // ─── Word Search Generator ───────────────────────────────────────────────────
+      const DIRECTIONS = {
+        'horizontal':           [ 0,  1],
+        'vertical':             [ 1,  0],
+        'diagonal-down-right':  [ 1,  1],
+        'diagonal-down-left':   [ 1, -1],
+        'backwards-horizontal': [ 0, -1],
+        'backwards-vertical':   [-1,  0],
+        'diagonal-up-right':    [-1,  1],
+        'diagonal-up-left':     [-1, -1],
+      };
+      const DIRS_EASY   = ['horizontal', 'vertical'];
+      const DIRS_MEDIUM = ['horizontal', 'vertical', 'diagonal-down-right', 'diagonal-down-left'];
+      const DIRS_HARD   = Object.keys(DIRECTIONS);
+      const DIAG_DIRS   = ['diagonal-down-right', 'diagonal-down-left', 'diagonal-up-right', 'diagonal-up-left'];
+
+      const canPlace = (grid, word, row, col, dr, dc, rows, cols) => {
+        for (let k = 0; k < word.length; k++) {
+          const r = row + k * dr, c = col + k * dc;
+          if (r < 0 || r >= rows || c < 0 || c >= cols) return false;
+          if (grid[r][c] !== '' && grid[r][c] !== word[k]) return false;
+        }
+        return true;
+      };
+
+      const doPlace = (grid, word, row, col, dr, dc) => {
+        const positions = [];
+        for (let k = 0; k < word.length; k++) {
+          const r = row + k * dr, c = col + k * dc;
+          grid[r][c] = word[k];
+          positions.push([r, c]);
+        }
+        return positions;
+      };
+
+      const generateWordSearch = () => {
+        const [rows, cols] = gridSize.split('x').map(Number);
+        const wordCount = difficulty === 'easy' ? 6 : difficulty === 'medium' ? 9 : 12;
+        const allDirs   = difficulty === 'easy' ? DIRS_EASY : difficulty === 'medium' ? DIRS_MEDIUM : DIRS_HARD;
+        const availDiag = DIAG_DIRS.filter(d => allDirs.includes(d));
+        const minDiag   = difficulty === 'medium' ? 3 : difficulty === 'hard' ? 4 : 0;
+        const bank      = shuffle([...WORD_BANKS[theme]]).filter(w => w.length <= Math.min(rows, cols));
+        const grid      = Array.from({ length: rows }, () => Array(cols).fill(''));
+        const solutions = [], placed = [];
+        let diagPlaced  = 0;
+        const allPos    = [];
+        for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) allPos.push([r, c]);
+
+        for (const word of bank) {
+          if (placed.length >= wordCount) break;
+          let dirsToTry = (diagPlaced < minDiag && availDiag.length > 0)
+            ? [...shuffle(availDiag), ...shuffle(allDirs.filter(d => !availDiag.includes(d)))]
+            : shuffle([...allDirs]);
+          let success = false;
+          for (const dir of dirsToTry) {
+            if (success) break;
+            const [dr, dc] = DIRECTIONS[dir];
+            for (const [r, c] of shuffle([...allPos])) {
+              if (canPlace(grid, word, r, c, dr, dc, rows, cols)) {
+                const wordPos = doPlace(grid, word, r, c, dr, dc);
+                solutions.push({ word, direction: dir, positions: wordPos });
+                placed.push(word);
+                if (availDiag.includes(dir)) diagPlaced++;
+                success = true;
+                break;
+              }
+            }
+          }
+        }
+        const alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        for (let r = 0; r < rows; r++)
+          for (let c = 0; c < cols; c++)
+            if (grid[r][c] === '') grid[r][c] = alpha[Math.floor(Math.random() * 26)];
+
+        const themeName = theme.charAt(0).toUpperCase() + theme.slice(1);
+        return { type: 'wordsearch', title: `Word Search — ${themeName}`, difficulty, gridSize, grid, words: placed, solutions };
+      };
+
+      // ─── Sudoku Generator ────────────────────────────────────────────────────────
+      const BOX_DIMS = { 4: [2, 2], 6: [2, 3], 9: [3, 3] };
+
+      const generateSudoku = () => {
+        const size           = parseInt(gridSize.split('x')[0]);
+        const [bRows, bCols] = BOX_DIMS[size] || [2, 2];
+
+        const isValid = (g, row, col, num) => {
+          if (g[row].includes(num)) return false;
+          if (g.some(r => r[col] === num)) return false;
+          const br = Math.floor(row / bRows) * bRows;
+          const bc = Math.floor(col / bCols) * bCols;
+          for (let r = br; r < br + bRows; r++)
+            for (let c = bc; c < bc + bCols; c++)
+              if (g[r][c] === num) return false;
+          return true;
+        };
+
+        const solve = (g) => {
+          for (let row = 0; row < size; row++) {
+            for (let col = 0; col < size; col++) {
+              if (g[row][col] === 0) {
+                const nums = shuffle(Array.from({ length: size }, (_, i) => i + 1));
+                for (const num of nums) {
+                  if (isValid(g, row, col, num)) {
+                    g[row][col] = num;
+                    if (solve(g)) return true;
+                    g[row][col] = 0;
+                  }
+                }
+                return false;
+              }
+            }
+          }
+          return true;
+        };
+
+        const solution = Array.from({ length: size }, () => Array(size).fill(0));
+        solve(solution);
+        const puzzleGrid = solution.map(row => [...row]);
+        const removeCount = difficulty === 'easy' ? Math.floor(size * size * 0.35) :
+                            difficulty === 'medium' ? Math.floor(size * size * 0.50) :
+                                                      Math.floor(size * size * 0.62);
+        const allPos = shuffle(Array.from({ length: size * size }, (_, i) => i));
+        for (let i = 0; i < removeCount; i++) {
+          puzzleGrid[Math.floor(allPos[i] / size)][allPos[i] % size] = 0;
+        }
+        return { type: 'sudoku', title: `Sudoku ${size}×${size}`, difficulty, gridSize: `${size}x${size}`, puzzle: puzzleGrid, solution };
+      };
+
+      // ─── Generate ────────────────────────────────────────────────────────────────
+      const generatePuzzle = () => {
+        setLoading(true);
+        setError(null);
+        setTimeout(() => {
+          try {
+            const data = puzzleType === 'wordsearch' ? generateWordSearch() : generateSudoku();
+            setPuzzle(data);
+            setStats(prev => ({
+              total:      prev.total + 1,
+              wordsearch: puzzleType === 'wordsearch' ? prev.wordsearch + 1 : prev.wordsearch,
+              sudoku:     puzzleType === 'sudoku'     ? prev.sudoku + 1     : prev.sudoku,
+            }));
+          } catch (err) {
+            setError(`Failed to generate puzzle: ${err.message}`);
+          } finally {
+            setLoading(false);
+          }
+        }, 50);
+      };
+
+      // ─── Printable Download ──────────────────────────────────────────────────────
+      const buildCellsHTML = (grid, pType, highlightSet) => {
+        const size           = grid.length;
+        const [bRows, bCols] = BOX_DIMS[size] || [2, 2];
+        return grid.map((row, i) =>
+          row.map((cell, j) => {
+            const rightBox    = pType === 'sudoku' && (j + 1) % bCols === 0 && j < size - 1;
+            const bottomBox   = pType === 'sudoku' && (i + 1) % bRows === 0 && i < size - 1;
+            const highlighted = highlightSet && highlightSet.has(`${i},${j}`);
+            const cellClass   = pType === 'wordsearch' ? 'ws-cell' : 'cell';
+            return `<div class="${cellClass}${highlighted ? ' hl' : ''}" style="${rightBox ? 'border-right:2px solid #1c2b4a;' : ''}${bottomBox ? 'border-bottom:2px solid #1c2b4a;' : ''}">${cell === 0 ? '' : cell}</div>`;
+          }).join('')
+        ).join('');
+      };
+
+      const handleDownloadPrintable = () => {
+        if (!puzzle) return;
+        const hlSet = new Set();
+        if (puzzle.type === 'wordsearch' && puzzle.solutions)
+          puzzle.solutions.forEach(sol => sol.positions.forEach(([r, c]) => hlSet.add(`${r},${c}`)));
+
+        const pGrid   = puzzle.type === 'wordsearch' ? puzzle.grid   : puzzle.puzzle;
+        const solGrid = puzzle.type === 'wordsearch' ? puzzle.grid   : puzzle.solution;
+        const cols    = pGrid[0].length;
+        const gridClass = puzzle.type === 'sudoku' ? 'sd-grid' : 'ws-grid';
+
+        const puzzleCells   = buildCellsHTML(pGrid,   puzzle.type, null);
+        const solutionCells = buildCellsHTML(solGrid, puzzle.type, puzzle.type === 'wordsearch' ? hlSet : null);
+
+        const wordListHTML = puzzle.type === 'wordsearch' ? `
+          <div class="section-label">Find these words</div>
+          <div class="word-list">
+            ${puzzle.words.map(w => `<span class="word-chip">${w}</span>`).join('')}
+          </div>` : '';
+
+        const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${puzzle.title}</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;margin:0;padding:20px;background:#f0f2f5}
+  .tip{max-width:800px;margin:0 auto 20px;padding:14px 18px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;color:#1e40af;font-size:13px}
+  .tip strong{font-weight:600}
+  .page{page-break-after:always;max-width:800px;margin:0 auto 32px;background:white;border:1px solid #e0e3e8;border-radius:8px;padding:32px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+  .page:last-child{page-break-after:auto}
+  h1{font-size:20px;font-weight:700;color:#1c2b4a;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid #e0e3e8}
+  .meta{display:flex;gap:24px;padding:10px 14px;background:#f8fafc;border:1px solid #e0e3e8;border-radius:6px;margin-bottom:20px;font-size:12px;color:#6b7280}
+  .meta-field{display:flex;align-items:center;gap:6px}
+  .meta-label{font-weight:600;color:#374151}
+  .meta-line{border-bottom:1px solid #d1d5db;width:90px;display:inline-block}
+  .grid{display:grid;gap:0;margin:16px auto;width:fit-content;font-family:'Courier New',monospace;font-weight:700;font-size:15px}
+  .sd-grid{border:2px solid #1c2b4a}
+  .ws-grid{gap:2px}
+  .cell{width:34px;height:34px;display:flex;align-items:center;justify-content:center;border:1px solid #c5c9d0;background:white}
+  .ws-cell{width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:transparent;border-radius:3px}
+  .hl{background:#1c2b4a!important;color:white!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  .section-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.6px;color:#6b7280;margin:18px 0 10px}
+  .word-list{display:flex;flex-wrap:wrap;gap:6px}
+  .word-chip{padding:4px 10px;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:4px;font-size:12px;font-weight:600;color:#374151;font-family:'Courier New',monospace}
+  @media print{body{margin:0;padding:10mm;background:white}.tip{display:none}.page{page-break-after:always;box-shadow:none;margin-bottom:0;border:none}.page:last-child{page-break-after:auto}}
+</style></head>
+<body>
+  <div class="tip"><strong>Ready to print</strong> — Press <strong>Ctrl+P</strong> (Windows) or <strong>Cmd+P</strong> (Mac) to print or save as PDF &nbsp;|&nbsp; Page 1: Puzzle &nbsp;·&nbsp; Page 2: Answer Key</div>
+  <div class="page">
+    <h1>${puzzle.title}</h1>
+    <div class="meta">
+      <div class="meta-field"><span class="meta-label">Name:</span><span class="meta-line"></span></div>
+      <div class="meta-field"><span class="meta-label">Date:</span><span class="meta-line"></span></div>
+      <div class="meta-field"><span class="meta-label">Difficulty:</span><span>${puzzle.difficulty.charAt(0).toUpperCase()+puzzle.difficulty.slice(1)}</span></div>
+    </div>
+    <div class="grid ${gridClass}" style="grid-template-columns:repeat(${cols},${puzzle.type==='sudoku'?34:32}px)">${puzzleCells}</div>
+    ${wordListHTML}
+  </div>
+  <div class="page">
+    <h1>${puzzle.title} — Answer Key</h1>
+    <div class="grid ${gridClass}" style="grid-template-columns:repeat(${cols},${puzzle.type==='sudoku'?34:32}px)">${solutionCells}</div>
+  </div>
+</body></html>`;
+
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href = url; a.download = `${puzzle.title.replace(/[\s—]+/g, '-')}.html`;
+        document.body.appendChild(a); a.click();
+        document.body.removeChild(a); URL.revokeObjectURL(url);
+      };
+
+      // ─── React Renderers ─────────────────────────────────────────────────────────
+      const renderWordSearchGrid = (grid, showSolution = false) => {
+        const hlPos = new Set();
+        if (showSolution && puzzle.solutions)
+          puzzle.solutions.forEach(sol => sol.positions.forEach(([r, c]) => hlPos.add(`${r},${c}`)));
+        return (
+          <div className="ws-grid" style={{ gridTemplateColumns: `repeat(${grid[0].length},32px)` }}>
+            {grid.map((row, i) => row.map((cell, j) => {
+              const hl = hlPos.has(`${i},${j}`);
+              return (
+                <div key={`${i}-${j}`} className={`ws-cell${hl ? ' hl' : ''}`}>{cell}</div>
+              );
+            }))}
+          </div>
+        );
+      };
+
+      const renderSudokuGrid = (grid) => {
+        const size           = grid.length;
+        const [bRows, bCols] = BOX_DIMS[size] || [2, 2];
+        return (
+          <div className="sd-grid" style={{ gridTemplateColumns: `repeat(${size},34px)` }}>
+            {grid.map((row, i) => row.map((cell, j) => {
+              const rBox = (j + 1) % bCols === 0 && j < size - 1;
+              const bBox = (i + 1) % bRows === 0 && i < size - 1;
+              const isGiven = cell !== 0;
+              return (
+                <div key={`${i}-${j}`} className={`sd-cell${isGiven ? ' given' : ' empty'}`}
+                  style={{
+                    borderRight:  rBox ? '2px solid #1c2b4a' : '1px solid #c5c9d0',
+                    borderBottom: bBox ? '2px solid #1c2b4a' : '1px solid #c5c9d0',
+                  }}>
+                  {cell !== 0 ? cell : ''}
+                </div>
+              );
+            }))}
+          </div>
+        );
+      };
+
+      const diffLabel = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
+      const typeLabel  = { wordsearch: 'Word Search', sudoku: 'Sudoku' };
+      const themeLabel = { animals: 'Animals', colors: 'Colors', food: 'Food', vehicles: 'Vehicles', nature: 'Nature', sports: 'Sports' };
+
+      // ─── Render ──────────────────────────────────────────────────────────────────
+      return (
+        <>
+          {/* Navbar */}
+          <div className="navbar">
+            <div className="navbar-logo">
+              <div className="navbar-logo-icon">🧩</div>
+              Kids Puzzle Generator
+            </div>
+            <div className="navbar-divider" />
+            <span className="navbar-subtitle">Print-ready puzzles for kids</span>
+            <div className="navbar-spacer" />
+            {stats.total > 0 && (
+              <>
+                <div className="navbar-stat">
+                  <strong>{stats.total}</strong> generated
+                </div>
+                <div className="navbar-stat-dot" />
+                <div className="navbar-stat">
+                  <strong>{stats.wordsearch}</strong> word search
+                </div>
+                <div className="navbar-stat-dot" />
+                <div className="navbar-stat">
+                  <strong>{stats.sudoku}</strong> sudoku
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Toolbar */}
+          <div className="toolbar">
+            <span className="toolbar-label">Type</span>
+            <select className="toolbar-select" value={puzzleType} onChange={e => setPuzzleType(e.target.value)}>
+              <option value="wordsearch">Word Search</option>
+              <option value="sudoku">Sudoku</option>
+            </select>
+
+            <div className="toolbar-sep" />
+
+            <span className="toolbar-label">Difficulty</span>
+            <select className="toolbar-select" value={difficulty} onChange={e => setDifficulty(e.target.value)} style={{ minWidth: '90px' }}>
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+
+            <div className="toolbar-sep" />
+
+            <span className="toolbar-label">Grid</span>
+            <select className="toolbar-select" value={gridSize} onChange={e => setGridSize(e.target.value)} style={{ minWidth: '130px' }}>
+              {puzzleType === 'wordsearch' ? (
+                <>
+                  <option value="8x8">8 × 8 — Small</option>
+                  <option value="10x10">10 × 10 — Medium</option>
+                  <option value="12x12">12 × 12 — Large</option>
+                  <option value="15x15">15 × 15 — XL</option>
+                </>
+              ) : (
+                <>
+                  <option value="4x4">4 × 4 — Beginner</option>
+                  <option value="6x6">6 × 6 — Intermediate</option>
+                  <option value="9x9">9 × 9 — Classic</option>
+                </>
+              )}
+            </select>
+
+            {puzzleType === 'wordsearch' && (
+              <>
+                <div className="toolbar-sep" />
+                <span className="toolbar-label">Theme</span>
+                <select className="toolbar-select" value={theme} onChange={e => setTheme(e.target.value)}>
+                  <option value="animals">Animals</option>
+                  <option value="colors">Colors</option>
+                  <option value="food">Food</option>
+                  <option value="vehicles">Vehicles</option>
+                  <option value="nature">Nature</option>
+                  <option value="sports">Sports</option>
+                </select>
+              </>
+            )}
+
+            <div className="toolbar-spacer" />
+
+            {puzzle && !loading && (
+              <button className="btn btn-outline" onClick={handleDownloadPrintable}>
+                <span className="btn-icon">⬇</span> Download
+              </button>
+            )}
+
+            <button className="btn btn-primary" onClick={generatePuzzle} disabled={loading}>
+              {loading ? 'Generating…' : (
+                <><span className="btn-icon">▶</span> Generate</>
+              )}
+            </button>
+          </div>
+
+          {/* Body */}
+          <div className="page-body">
+            {error && (
+              <div className="error-banner">
+                <span>⚠</span> {error}
+              </div>
+            )}
+
+            {loading && (
+              <div className="loading-state">
+                <div className="spinner" />
+                <p>Generating your {typeLabel[puzzleType].toLowerCase()}…</p>
+              </div>
+            )}
+
+            {!puzzle && !loading && (
+              <div className="empty-state">
+                <div className="empty-icon">📄</div>
+                <h2>No puzzle yet</h2>
+                <p>Choose your settings above and click <strong>Generate</strong> to create a printable puzzle.</p>
+              </div>
+            )}
+
+            {puzzle && !loading && (
+              <div className="panels">
+                {/* Puzzle panel */}
+                <div className="panel">
+                  <div className="panel-header">
+                    <div className="panel-badge">P</div>
+                    <div className="panel-title">{puzzle.title}</div>
+                    <div className="panel-meta">{diffLabel[puzzle.difficulty]} · {puzzle.gridSize}</div>
+                  </div>
+                  <div className="panel-body">
+                    <div className="info-strip">
+                      <div className="info-field">
+                        <span className="info-field-label">Name</span>
+                        <span className="info-field-line" />
+                      </div>
+                      <div className="info-field">
+                        <span className="info-field-label">Date</span>
+                        <span className="info-field-line" />
+                      </div>
+                      <div className="info-field">
+                        <span className="info-field-label">Difficulty:</span>
+                        <span className="info-field-value">{diffLabel[puzzle.difficulty]}</span>
+                      </div>
+                    </div>
+
+                    <div className="grid-wrapper">
+                      {puzzle.type === 'wordsearch'
+                        ? renderWordSearchGrid(puzzle.grid, false)
+                        : renderSudokuGrid(puzzle.puzzle)}
+                    </div>
+
+                    {puzzle.type === 'wordsearch' && (
+                      <>
+                        <div className="word-list-header">Find these words</div>
+                        <div className="word-list">
+                          {puzzle.words.map((word, i) => (
+                            <span key={i} className="word-chip">{word}</span>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {/* Answer Key panel */}
+                <div className="panel">
+                  <div className="panel-header">
+                    <div className="panel-badge" style={{ background: '#e6f4ea', color: '#16a34a' }}>A</div>
+                    <div className="panel-title">Answer Key</div>
+                    <div className="panel-meta">{puzzle.title}</div>
+                  </div>
+                  <div className="panel-body">
+                    <div className="grid-wrapper">
+                      {puzzle.type === 'wordsearch'
+                        ? renderWordSearchGrid(puzzle.grid, true)
+                        : renderSudokuGrid(puzzle.solution)}
+                    </div>
+                    {puzzle.type === 'wordsearch' && (
+                      <>
+                        <div className="word-list-header">Words found</div>
+                        <div className="word-list">
+                          {puzzle.words.map((word, i) => (
+                            <span key={i} className="word-chip" style={{ background: '#e6f4ea', borderColor: '#bbf7d0', color: '#15803d' }}>{word}</span>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<PuzzleGenerator />);
+  </script>
+</body>
+</html>
