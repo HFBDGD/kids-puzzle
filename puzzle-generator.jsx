@@ -4,7 +4,7 @@ export default function PuzzleGenerator() {
   const [puzzleType, setPuzzleType] = useState('wordsearch');
   const [difficulty, setDifficulty]  = useState('easy');
   const [gridSize,   setGridSize]    = useState('8x8');
-  const [theme,      setTheme]       = useState('animals');
+  const [theme,      setTheme]       = useState('seasonal');
   const [puzzle,     setPuzzle]      = useState(null);
   const [loading,    setLoading]     = useState(false);
   const [error,      setError]       = useState(null);
@@ -37,6 +37,50 @@ export default function PuzzleGenerator() {
     sports:   ['RUN','SKI',
                 'SWIM','GOLF','SURF','DIVE','BOWL','JUMP','KICK',
                 'TENNIS','HOCKEY','SOCCER','BOXING','ROWING','CYCLING','CRICKET'],
+    backToSchool:   ['PENCIL','RULER','BOOK','BAG','DESK','BELL','CLASS','LUNCH','CHALK','PAINT',
+                      'LEARN','WRITE','READ','SHARE','STUDY','SPELL','DRAW','GRADE','SKIP','PLAY'],
+    valentines:     ['HEART','LOVE','ROSE','CARD','GIFT','HUG','KISS','FRIEND','FLOWER','CANDY',
+                      'CHARM','SWEET','KIND','CARE','HAPPY','SMILE','CUPID','DAISY','PINK','BOND'],
+    harmonyWeek:    ['KIND','SHARE','FRIEND','PEACE','SMILE','CARE','HELP','TRUST','FAIR','EQUAL',
+                      'UNITE','PROUD','SAFE','BELONG','WARM','HONOR','BRAVE','VOICE','LEARN','GROW'],
+    easter:         ['EGG','BUNNY','BASKET','HOP','CHICK','POPPY','BRAVE','HONOR','NEST','HUNT',
+                      'HIDE','FIND','SHELL','BLOOM','LAMB','HATCH','MARCH','DAWN','PEACE','RIBBON'],
+    mothersDay:     ['MUM','ROSE','HUG','CAKE','LOVE','KIND','GIFT','WARM','FLOWER','COOK',
+                      'CARE','SMILE','HEART','LUNCH','BAKE','KISS','SOFT','SWEET','PROUD','HOME'],
+    winter:         ['COLD','FROST','COAT','SCARF','RAIN','CLOUD','COSY','FIRE','WOOL','BOOT',
+                      'GLOVE','STORM','SLEET','GREY','DRIZZLE','FOGGY','BLANKET','SOUP','WARM','DAMP'],
+    winterHolidays: ['SLEEP','MOVIE','COCOA','GAME','BOOK','REST','CAMP','BEACH','SWIM','HIKE',
+                      'RELAX','SUNNY','SNACK','FAMILY','PICNIC','PARK','FUN','LAUGH','DREAM','PLAY'],
+    bookWeek:       ['STORY','READ','HERO','MAGIC','QUEST','DRAGON','BRAVE','WITCH','PLOT','AUTHOR',
+                      'CHAPTER','MYTH','FAIRY','KNIGHT','WAND','SPELL','SCROLL','PIRATE','GIANT','EXPLORE'],
+    fathersDay:     ['DAD','TOOL','SPORT','FISH','GAME','LAUGH','PROUD','GRILL','GOLF','COACH',
+                      'HIKE','CATCH','BUILD','FIX','TEACH','GUIDE','STRONG','SMART','KIND','HERO'],
+    halloween:      ['GHOST','WITCH','BAT','MOON','DARK','TRICK','CANDY','MASK','PUMPKIN','SPIDER',
+                      'HOWL','CAPE','CREEP','HAUNT','BROOM','SKULL','FANG','COBWEB','SHRIEK','NIGHT'],
+    melbourneCup:   ['HORSE','RACE','HAT','CUP','JOCKEY','FIELD','SADDLE','GALLOP','TROPHY','TRACK',
+                      'CROWD','STABLE','FINISH','CANTER','FORM','PARADE','RIBBON','CHEER','FENCE','TURF'],
+    christmas:      ['STAR','BELL','GIFT','TREE','SNOW','CANDY','HOLLY','ANGEL','SANTA','REINDEER',
+                      'SLEIGH','TINSEL','CAROL','FEAST','GIVING','WISH','LIGHTS','JOY','FAMILY','WRAP'],
+  };
+
+  const SEASONAL_LABELS = {
+    backToSchool: 'Back to School', valentines: "Valentine's Day",
+    harmonyWeek: 'Harmony Week', easter: 'Easter & ANZAC',
+    mothersDay: "Mother's Day", winter: 'Winter',
+    winterHolidays: 'Winter Holidays', bookWeek: 'Book Week',
+    fathersDay: "Father's Day", halloween: 'Halloween',
+    melbourneCup: 'Melbourne Cup', christmas: 'Christmas',
+  };
+
+  const getSeasonalTheme = () => {
+    const month = new Date().getMonth() + 1;
+    const map = {
+      1: 'backToSchool', 2: 'valentines', 3: 'harmonyWeek',
+      4: 'easter', 5: 'mothersDay', 6: 'winter',
+      7: 'winterHolidays', 8: 'bookWeek', 9: 'fathersDay',
+      10: 'halloween', 11: 'melbourneCup', 12: 'christmas',
+    };
+    return map[month] || 'animals';
   };
 
   // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -94,8 +138,8 @@ export default function PuzzleGenerator() {
     const availDiag = DIAG_DIRS.filter(d => allDirs.includes(d));
     const minDiag   = difficulty === 'medium' ? 3 : difficulty === 'hard' ? 4 : 0;
 
-    // Pick words that fit in the grid
-    const bank = shuffle([...WORD_BANKS[theme]]).filter(w => w.length <= Math.min(rows, cols));
+    const resolvedTheme = theme === 'seasonal' ? getSeasonalTheme() : theme;
+    const bank = shuffle([...WORD_BANKS[resolvedTheme]]).filter(w => w.length <= Math.min(rows, cols));
 
     const grid      = Array.from({ length: rows }, () => Array(cols).fill(''));
     const solutions = [];
@@ -141,8 +185,10 @@ export default function PuzzleGenerator() {
       for (let c = 0; c < cols; c++)
         if (grid[r][c] === '') grid[r][c] = alpha[Math.floor(Math.random() * 26)];
 
-    const themeName = theme.charAt(0).toUpperCase() + theme.slice(1);
-    return { type: 'wordsearch', title: `Word Search - ${themeName}`, difficulty, gridSize, grid, words: placed, solutions };
+    const label = theme === 'seasonal'
+      ? SEASONAL_LABELS[getSeasonalTheme()]
+      : resolvedTheme.charAt(0).toUpperCase() + resolvedTheme.slice(1);
+    return { type: 'wordsearch', title: `Word Search - ${label}`, difficulty, gridSize, grid, words: placed, solutions };
   };
 
   // ─── Sudoku Generator ─────────────────────────────────────────────────────────
@@ -436,6 +482,7 @@ export default function PuzzleGenerator() {
                 <label style={{ display:'block', fontWeight:'bold', color:'#333', marginBottom:'8px', fontSize:'1.1em' }}>Theme</label>
                 <select value={theme} onChange={e => setTheme(e.target.value)}
                   style={{ width:'100%', padding:'12px', border:'2px solid #ddd', borderRadius:'8px', fontSize:'1em', cursor:'pointer' }}>
+                  <option value="seasonal">🗓️ Seasonal (auto)</option>
                   <option value="animals">Animals</option>
                   <option value="colors">Colors</option>
                   <option value="food">Food</option>
